@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Panduan interaktif edit video AI untuk pemula, lengkap dengan Prompt Builder dan fitur copy.">
+  <title>AI Video Editing Prompt Guide</title>
+  <style>
+    :root{--ink:#24212b;--muted:#6d6875;--purple:#5b3fd6;--purple2:#3e279f;--lav:#efebff;--orange:#ff9f43;--green:#2dbe78;--cream:#fff9f2;--paper:#fffdf9;--line:#ddd7cf;--red:#e75555}
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;background:var(--cream);color:var(--ink);font-family:Arial,Helvetica,sans-serif}
+    button,input,textarea{font:inherit}
+    button{color:inherit}
+    a{color:inherit;text-decoration:none}
+    pre{white-space:pre-wrap;word-break:break-word}
+    
+    .reading-bar{position:fixed;z-index:100;top:0;left:0;width:100%;height:3px;background:linear-gradient(90deg,var(--purple),var(--orange));transform-origin:left;animation:read linear;animation-timeline:scroll()}
+    @keyframes read{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+    
+    header{position:sticky;z-index:50;top:0;height:74px;padding:0 6vw;display:flex;align-items:center;justify-content:space-between;background:rgba(255,249,242,.93);border-bottom:1px solid rgba(36,33,43,.1);backdrop-filter:blur(14px);transition: border-color 0.3s;}
+    .brand{display:flex;align-items:center;gap:10px}
+    .logo{width:38px;height:38px;display:grid;place-items:center;border-radius:11px;background:var(--purple);color:#fff;font-size:14px;font-weight:900;transform:rotate(-4deg);box-shadow:3px 3px 0 var(--orange)}
+    .brand strong,.brand small{display:block;line-height:1}
+    .brand strong{font-size:14px}
+    .brand small{margin-top:5px;color:var(--muted);font-size:9px;letter-spacing:.12em;text-transform:uppercase}
+    
+    nav{display:flex;gap:26px;color:#524d59;font-size:12px;font-weight:800}
+    nav a{padding-bottom:4px;border-bottom:2px solid transparent;transition:.2s}
+    nav a:hover, nav a.active{color:var(--purple);border-bottom-color:var(--purple)}
+    .nav-cta{padding:11px 16px;border-radius:11px;background:var(--ink);color:#fff;font-size:11px;font-weight:900}
+    .menu{display:none;border:0;background:none;font-size:22px}
+
+    .hero{min-height:670px;padding:70px 7vw 80px;display:grid;grid-template-columns:1.03fr .97fr;gap:5vw;align-items:center;overflow:hidden}
+    .eyebrow,.kicker{display:inline-flex;align-items:center;color:var(--purple2);font-size:10px;font-weight:900;letter-spacing:.12em;text-transform:uppercase}
+    .dot{width:8px;height:8px;margin-right:9px;border-radius:50%;background:var(--green);box-shadow:0 0 0 6px rgba(45,190,120,.13)}
+    
+    h1{max-width:690px;margin:20px 0 22px;font-size:clamp(48px,5.3vw,78px);line-height:.98;letter-spacing:-.055em}
+    h1 em{position:relative;color:var(--purple);font-style:normal;white-space:nowrap}
+    h1 em:after{content:"";position:absolute;left:0;right:0;bottom:-8px;height:7px;border-radius:50%;background:var(--orange);opacity:.75;transform:rotate(-1deg)}
+    .lead{max-width:610px;margin:0;color:var(--muted);font-size:17px;line-height:1.75}
+    
+    .actions{display:flex;gap:11px;margin-top:29px}
+    .btn{min-height:50px;padding:0 20px;display:inline-flex;align-items:center;justify-content:center;gap:12px;border:0;border-radius:13px;cursor:pointer;font-size:12px;font-weight:900;transition:.2s}
+    .btn:hover{transform:translateY(-2px)}
+    .primary{background:var(--purple);color:#fff;box-shadow:0 10px 27px rgba(91,63,214,.22)}
+    .secondary{border:1px solid var(--line);background:#fff}
+    .dark{background:var(--ink);color:#fff}
+    .orange{background:var(--orange);color:var(--ink)}
+    
+    .stats{display:flex;gap:27px;margin-top:40px}
+    .stats div{display:grid;grid-template-columns:auto 1fr;column-gap:8px;align-items:center}
+    .stats b{grid-row:1/3;color:var(--purple);font-size:29px}
+    .stats span{max-width:70px;color:var(--muted);font-size:10px;line-height:1.2}
+    
+    /* Device Frames Customization */
+    .visual{position:relative;min-height:520px}
+    .blob{position:absolute;width:390px;height:390px;left:15%;top:55px;border-radius:50%;background:var(--lav)}
+    .phone{position:absolute;width:205px;height:378px;padding:10px;border:2px solid var(--ink);border-radius:27px;background:#faf8f3;box-shadow:10px 14px 0 rgba(36,33,43,.12)}
+    .raw{left:3%;top:90px;transform:rotate(-5deg)}
+    .edited{right:2%;top:48px;transform:rotate(4deg);background:#fff}
+    
+    .phone-top{height:27px;padding:0 7px;display:flex;align-items:center;justify-content:space-between;font-size:7px;font-weight:900;letter-spacing:.1em}
+    .phone-top i{width:35px;height:6px;border-radius:20px;background:var(--ink)}
+    
+    .screen{position:relative;height:296px;overflow:hidden;border-radius:18px;background:linear-gradient(145deg,#d9d4cc,#f0ede8)}
+    .edited .screen{background:#ffe36a}
+    
+    /* New: Image constraint for hero phones */
+    .screen img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+    .pop{position:absolute;z-index:4;padding:6px 8px;border:2px solid var(--ink);background:#fff;box-shadow:3px 3px 0 var(--ink);font-size:9px;font-weight:900}
+    .p1{top:32px;right:7px;transform:rotate(5deg)}
+    .p2{left:8px;bottom:53px;transform:rotate(-7deg);background:#64e3c1}
+    .timeline{height:20px;margin:8px 5px 0;border-radius:8px;background:#ddd8d1;overflow:hidden}
+    .timeline i{display:block;width:36%;height:100%;background:#aaa3b1}
+    .edited .timeline i{width:70%;background:var(--purple)}
+    
+    .prompt-chip{position:absolute;z-index:7;left:calc(50% - 56px);top:195px;padding:11px 15px;border:2px solid var(--ink);border-radius:11px;background:#fff;box-shadow:4px 4px 0 var(--orange);font-size:11px;font-weight:900}
+    .arrow{position:absolute;z-index:6;left:calc(50% - 9px);top:248px;font-size:31px;font-weight:900}
+    .float{position:absolute;z-index:8;padding:9px 12px;border:1px solid var(--line);border-radius:10px;background:#fff;box-shadow:0 8px 22px rgba(36,33,43,.1);font-size:9px;font-weight:900}
+    .f1{right:4%;top:20px;color:var(--purple)}
+    .f2{left:17%;bottom:23px;color:#217e55}
+    
+    .audience{min-height:86px;padding:18px 6vw;display:flex;align-items:center;justify-content:center;gap:4vw;background:var(--ink);color:#fff}
+    .audience>span{color:#c9c4d0;font-size:9px;letter-spacing:.1em;text-transform:uppercase}
+    .audience div{font-size:11px;font-weight:800}
+    .audience b{margin-right:7px;color:var(--orange)}
+    
+    section{scroll-margin-top:72px}
+    .section{padding:100px 7vw}
+    .paper{background:var(--paper)}
+    .center{max-width:760px;margin:0 auto 46px;text-align:center}
+    .heading h2,.intro h2{margin:12px 0 14px;font-size:clamp(36px,4.4vw,56px);line-height:1.04;letter-spacing:-.048em}
+    .heading p,.intro>p{color:var(--muted);font-size:15px;line-height:1.7}
+    
+    .step-grid{max-width:1160px;margin:auto;display:grid;grid-template-columns:repeat(4,1fr);gap:13px}
+    .step{min-height:210px;padding:22px;border:1px solid var(--line);border-radius:19px;background:#fff}
+    .step:nth-child(even){transform:translateY(13px)}
+    .num{width:39px;height:39px;display:grid;place-items:center;border-radius:11px;background:var(--lav);color:var(--purple);font-size:10px;font-weight:900}
+    .step h3{margin:30px 0 8px;font-size:20px}
+    .step p{margin:0;color:var(--muted);font-size:12px;line-height:1.65}
+    .note{max-width:820px;margin:58px auto 0;padding:21px 24px;display:flex;gap:16px;border:1px solid #dcd3ff;border-radius:17px;background:var(--lav)}
+    .note i{width:41px;height:41px;display:grid;place-items:center;flex:none;border-radius:50%;background:var(--purple);color:#fff;font-style:normal}
+    .note b{font-size:12px}
+    .note p{margin:6px 0 0;color:#595269;font-size:12px;line-height:1.6}
+    
+    .prep{display:grid;grid-template-columns:.78fr 1.22fr;gap:6vw;align-items:center;max-width:1160px;margin:auto}
+    .progress-card{margin-top:25px;padding:15px;display:flex;align-items:center;gap:15px;border:1px solid var(--line);border-radius:17px;background:#fff}
+    .ring{--p:0deg;position:relative;width:56px;height:56px;display:grid;place-items:center;flex:none;border-radius:50%;background:conic-gradient(var(--green) var(--p),#ebe6df 0);transition:--p .3s}
+    .ring:after{content:"";position:absolute;inset:6px;border-radius:50%;background:#fff}
+    .ring b{position:relative;z-index:2;font-size:10px}
+    .progress-card strong{font-size:12px}
+    .progress-card small{display:block;margin-top:5px;color:var(--muted);font-size:10px}
+    .checks{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .check{min-height:100px;padding:15px;display:flex;gap:12px;border:1px solid var(--line);border-radius:16px;background:#fff;text-align:left;cursor:pointer;transition:.2s}
+    .check:hover{border-color:#b9afe8}
+    .check.done{border-color:#87dcb4;background:#f1fff8}
+    .box{width:23px;height:23px;display:grid;place-items:center;flex:none;border:2px solid #bbb4bf;border-radius:7px;color:#fff;font-size:10px;transition:.2s}
+    .done .box{border-color:var(--green);background:var(--green)}
+    .check strong,.check small{display:block}
+    .check strong{font-size:11px}
+    .check small{margin-top:6px;color:var(--muted);font-size:9px;line-height:1.5}
+    
+    .dark-section{background:var(--ink);color:#fff}
+    .light-kicker{color:#c5baff}
+    .dark-section .heading p{color:#c8c2ce}
+    .lock-grid{display:grid;grid-template-columns:1.25fr .75fr;gap:17px;margin-top:40px}
+    .prompt-card{overflow:hidden;border-radius:20px;background:#17151d;border:1px solid #504a58}
+    .prompt-head{min-height:58px;padding:0 18px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,.13)}
+    .prompt-head span{font-size:9px;font-weight:900;letter-spacing:.1em}
+    .copy{padding:9px 11px;border:0;border-radius:8px;background:var(--purple);color:#fff;cursor:pointer;font-size:9px;font-weight:900;transition: background .2s, color .2s;}
+    .prompt-card pre{max-height:470px;overflow:auto;margin:0;padding:23px;color:#ded9e5;font:10px/1.85 Consolas,monospace}
+    
+    .variables{padding:25px;border-radius:20px;background:#f2eeff;color:var(--ink)}
+    .variables h3{margin:0 0 18px;font-size:19px}
+    .variables article{padding:15px 0;border-top:1px solid #d5cee8}
+    .variables code{color:var(--purple);font-size:10px;font-weight:900}
+    .variables p{margin:7px 0;color:#625c6d;font-size:10px;line-height:1.5}
+    .variables b{font-size:9px}
+    .anchor-note{margin-top:15px!important;padding:13px!important;border:0!important;border-radius:12px;background:#fff}
+    
+    /* STYLE CARDS UPDATE (1:1 Ratio) */
+    .styles{max-width:1190px;margin:auto;display:grid;grid-template-columns:repeat(6,1fr);gap:13px}
+    .style-card{grid-column:span 2;padding:0;overflow:hidden;border:1px solid var(--line);border-radius:19px;background:#fff;text-align:left;cursor:pointer;transition:.2s}
+    .style-card:nth-child(4){grid-column:2/span 2}
+    .style-card:hover{transform:translateY(-3px)}
+    .style-card.selected{border:2px solid var(--purple);box-shadow:0 14px 36px rgba(91,63,214,.17)}
+    
+    .style-preview{position:relative;overflow:hidden;background:#eee}
+    /* New: aspect-ratio for perfect square */
+    .style-preview img{width:100%;aspect-ratio:1/1;object-fit:cover;display:block}
+    
+    .style-state{position:absolute;z-index:5;top:11px;right:11px;padding:6px 8px;border-radius:99px;background:rgba(255,255,255,.9);font-size:8px;font-weight:900;transition:.2s;}
+    .style-card.selected .style-state{background:var(--purple);color:#fff;}
+    
+    .style-copy{padding:17px}
+    .style-copy small{color:var(--purple);font-size:8px;font-weight:900;text-transform:uppercase}
+    .style-copy h3{margin:6px 0 8px;font-size:16px}
+    .style-copy p{min-height:50px;margin:0;color:var(--muted);font-size:10px;line-height:1.55}
+    .tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:11px}
+    .tags span{padding:5px 7px;border-radius:99px;background:#f1eee9;color:#66606b;font-size:7px;font-weight:800}
+    
+    .builder-section{background:var(--purple);color:#fff}
+    .builder-title{max-width:760px}
+    .builder-title h2{margin:12px 0 13px;font-size:clamp(38px,5vw,60px);line-height:1.02;letter-spacing:-.05em}
+    .builder-title p{color:#d8d1ff}
+    .builder-grid{display:grid;grid-template-columns:.83fr 1.17fr;gap:17px;margin-top:28px}
+    .form{padding:23px;border-radius:20px;background:#fff;color:var(--ink)}
+    label,fieldset{display:block;margin:0 0 18px;padding:0;border:0}
+    label span,legend{display:block;margin-bottom:4px;font-size:11px;font-weight:900}
+    label small,fieldset>small{display:block;margin-bottom:8px;color:var(--muted);font-size:9px}
+    .form input,.form textarea{width:100%;padding:11px 12px;border:1px solid #dcd6e1;border-radius:10px;background:#fbfaf8;color:var(--ink);font-size:10px;outline:none;resize:vertical;transition:.2s}
+    .form input:focus,.form textarea:focus{border-color:var(--purple);box-shadow:0 0 0 3px rgba(91,63,214,.1)}
+    fieldset input{margin-top:6px}
+    .selected-style{padding:13px;border-radius:11px;background:var(--lav)}
+    .selected-style small,.selected-style b{display:block}
+    .selected-style small{color:var(--muted);font-size:8px;text-transform:uppercase}
+    .selected-style b{margin-top:5px;font-size:11px}
+    
+    .generated{min-height:720px;display:flex;flex-direction:column;overflow:hidden;border-radius:20px;background:#17151d}
+    .generated .prompt-head{padding:15px 18px}
+    .generated .prompt-head small{display:block;margin-top:5px;color:#aaa3b0;font-size:8px}
+    .generated pre{flex:1;max-height:650px;overflow:auto;margin:0;padding:21px;color:#ddd7e4;font:9.5px/1.8 Consolas,monospace;transition: background-color 0.5s ease;}
+    .prompt-status{padding:13px 18px;display:flex;flex-wrap:wrap;gap:6px;border-top:1px solid #3d3944}
+    .prompt-status span{padding:6px 7px;border-radius:99px;background:#27232d;color:#b6e8cc;font-size:7px;font-weight:800}
+    
+    .popup-section{background:#ffefd1}
+    .two-col{max-width:1100px;margin:auto;display:grid;grid-template-columns:.75fr 1.25fr;gap:6vw;align-items:center}
+    .rules{padding:0;list-style:none}
+    .rules li{padding:8px 0;border-bottom:1px solid #e5d4b8;font-size:11px}
+    .compare{padding:24px;border:1px solid #e3cfad;border-radius:20px;background:#fff}
+    .bad,.good{padding:16px;border-radius:13px}
+    .bad{background:#fff3f1}
+    .good{margin-top:9px;background:#effbf5}
+    .bad span,.good span{font-size:8px;font-weight:900;text-transform:uppercase}
+    .bad span{color:#c84840}
+    .good span{color:#23815a}
+    .bad p{margin:9px 0 0;color:#7b6b6a;font-size:10px;line-height:1.6;text-decoration:line-through}
+    .good div{display:flex;flex-wrap:wrap;gap:6px;margin-top:11px}
+    .good b{padding:8px;border:2px solid var(--ink);background:#ffde57;box-shadow:3px 3px 0 var(--ink);font-size:9px}
+    .compare>small{display:block;margin-top:14px;color:var(--muted);font-size:8px;line-height:1.6}
+    
+    .flow-grid{max-width:1130px;margin:auto;display:grid;grid-template-columns:.75fr 1.25fr;gap:6vw}
+    .file-note{margin-top:24px;padding:15px;border:1px solid #4b4552;border-radius:13px;background:#302c36}
+    .file-note b,.file-note span,.file-note small{display:block}
+    .file-note b{font-size:8px;text-transform:uppercase}
+    .file-note span{margin-top:7px;color:#ffc36b;font-size:11px;font-weight:900}
+    .file-note small{margin-top:6px;color:#aaa3b0;font-size:8px}
+    .flow-list{margin:0;padding:0;list-style:none}
+    .flow-list li{min-height:68px;padding:9px 0;display:grid;grid-template-columns:40px 1fr;gap:12px;align-items:center;border-bottom:1px solid #4b4552}
+    .flow-list span{width:34px;height:34px;display:grid;place-items:center;border-radius:9px;background:var(--purple);font-size:9px;font-weight:900}
+    .flow-list p{margin:0;color:#e0dce5;font-size:11px;line-height:1.5}
+    
+    .revision-grid{max-width:1170px;margin:auto;display:grid;grid-template-columns:repeat(6,1fr);gap:12px}
+    .revision{grid-column:span 2;min-height:280px;padding:21px;display:flex;flex-direction:column;border:1px solid var(--line);border-radius:18px;background:#fff}
+    .revision:nth-child(4){grid-column:2/span 2}
+    .revision-icon{width:38px;height:38px;display:grid;place-items:center;border-radius:10px;background:var(--lav);color:var(--purple);font-weight:900}
+    .revision h3{margin:22px 0 9px;font-size:16px}
+    .revision p{flex:1;margin:0;color:var(--muted);font-size:10px;line-height:1.65}
+    .revision .copy{align-self:flex-start;margin-top:15px;background:var(--ink)}
+    
+    .five-rules{max-width:1100px;margin:46px auto 0;padding:25px;border-radius:20px;background:var(--lav)}
+    .five-rules h3{margin:0 0 16px;font-size:18px}
+    .five-rules>div{display:grid;grid-template-columns:repeat(5,1fr);gap:9px}
+    .five-rules span{padding-right:9px;border-right:1px solid #cfc6ef;color:#5f586c;font-size:9px;line-height:1.5}
+    .five-rules span:last-child{border:0}
+    .five-rules b{display:block;margin-bottom:8px;color:var(--purple)}
+    
+    .income{max-width:1160px;margin:auto;padding:52px;border-radius:28px;background:var(--purple);color:#fff}
+    .income p{max-width:660px;color:#ddd6ff}
+    .income-steps{margin-top:30px;display:grid;grid-template-columns:repeat(4,1fr);border:1px solid rgba(255,255,255,.2);border-radius:16px}
+    .income-steps span{min-height:90px;padding:15px;display:flex;flex-direction:column;justify-content:center;gap:9px;border-right:1px solid rgba(255,255,255,.2);font-size:10px;font-weight:800}
+    .income-steps span:last-child{border:0}
+    .income-steps b{color:var(--orange)}
+    
+    .privacy{max-width:1030px;margin:auto;padding:42px 7vw 70px;display:flex;gap:15px}
+    .privacy-icon{width:42px;height:42px;display:grid;place-items:center;flex:none;border-radius:50%;background:#ffe4b6}
+    .privacy b{font-size:12px}
+    .privacy p{margin:7px 0 0;color:var(--muted);font-size:10px;line-height:1.7}
+    
+    footer{min-height:120px;padding:25px 7vw;display:flex;align-items:center;justify-content:space-between;gap:20px;background:var(--ink);color:#fff}
+    footer p{color:#afa8b5;font-size:9px}
+    footer a{color:#c9beff;font-size:9px;font-weight:900}
+    
+    .toast{position:fixed;z-index:200;left:50%;bottom:22px;padding:11px 15px;border-radius:11px;background:var(--green);color:#fff;box-shadow:0 10px 28px rgba(36,33,43,.2);font-size:10px;font-weight:900;opacity:0;transform:translate(-50%,20px);pointer-events:none;transition:.2s}
+    .toast.show{opacity:1;transform:translate(-50%,0)}
+    
+    @media(max-width:950px){
+      nav{display:none;position:absolute;top:73px;left:0;right:0;padding:20px 6vw;flex-direction:column;background:var(--cream);border-bottom:1px solid var(--line)}
+      nav.open{display:flex}
+      .nav-cta{display:none}
+      .menu{display:block}
+      .hero{grid-template-columns:1fr}
+      .visual{max-width:620px;width:100%;margin:auto}
+      .step-grid{grid-template-columns:1fr 1fr}
+      .prep,.lock-grid,.builder-grid,.two-col,.flow-grid{grid-template-columns:1fr}
+      .styles{grid-template-columns:1fr 1fr}
+      .style-card,.style-card:nth-child(4){grid-column:auto}
+      .style-card:last-child{grid-column:1/-1;max-width:calc(50% - 7px);justify-self:center}
+      .revision-grid{grid-template-columns:1fr 1fr}
+      .revision,.revision:nth-child(4){grid-column:auto}
+      .revision:last-child{grid-column:1/-1}
+      .five-rules>div{grid-template-columns:1fr 1fr 1fr}
+    }
+    
+    @media(max-width:620px){
+      header{height:66px;padding:0 20px}
+      nav{top:65px}
+      .hero{min-height:auto;padding:42px 22px 55px}
+      .hero h1{font-size:45px}
+      .lead{font-size:15px}
+      .actions{flex-direction:column}
+      .btn{width:100%}
+      .stats{gap:14px;justify-content:space-between}
+      .stats b{font-size:24px}
+      .visual{min-height:415px;width:118%;left:-9%;transform:scale(.83);transform-origin:center top}
+      .phone{width:178px;height:335px}
+      .screen{height:255px}
+      .raw{left:0}
+      .edited{right:0}
+      .prompt-chip{top:175px}
+      .arrow{top:225px}
+      .f2{left:7%;bottom:12px}
+      .audience{padding:23px 22px;align-items:flex-start;flex-direction:column;gap:11px}
+      .section{padding:75px 22px}
+      .step-grid,.checks,.styles,.revision-grid{grid-template-columns:1fr}
+      .step:nth-child(even){transform:none}
+      .style-card:last-child,.revision:last-child{grid-column:auto;max-width:none}
+      .note{align-items:flex-start}
+      .prompt-card pre,.generated pre{font-size:9px}
+      .style-copy p{min-height:0}
+      .generated{min-height:650px}
+      .prompt-head{align-items:flex-start;gap:10px}
+      .prompt-head .copy{flex:none}
+      .good div{align-items:flex-start;flex-direction:column}
+      .five-rules>div{grid-template-columns:1fr}
+      .five-rules span{padding:9px 0;border-right:0;border-bottom:1px solid #cfc6ef}
+      .income{padding:36px 22px}
+      .income-steps{grid-template-columns:1fr 1fr}
+      .income-steps span:nth-child(2){border-right:0}
+      .income-steps span:nth-child(-n+2){border-bottom:1px solid rgba(255,255,255,.2)}
+      .privacy{padding:35px 22px 55px}
+      footer{padding:32px 22px;align-items:flex-start;flex-direction:column}
+      footer p{margin:0}
+    }
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
+  </style>
+</head>
+<body>
+  <div class="reading-bar" aria-hidden="true"></div>
+  <header>
+    <a class="brand" href="#mulai"><span class="logo">AI</span><span><strong>Prompt Guide</strong><small>Video Editing</small></span></a>
+    <nav id="nav">
+      <a href="#cara">Cara kerja</a>
+      <a href="#persiapan">Persiapan</a>
+      <a href="#prompt">Prompt</a>
+      <a href="#gaya">Gaya visual</a>
+      <a href="#perbaikan">Perbaikan</a>
+    </nav>
+    <a class="nav-cta" href="#builder">Buat prompt →</a>
+    <button class="menu" id="menu" aria-label="Buka menu">☰</button>
+  </header>
+
+  <section class="hero" id="mulai">
+    <div>
+      <span class="eyebrow"><i class="dot"></i>Panduan pemula · Bisa dipraktikkan dari rumah</span>
+      <h1>Edit video lebih mudah dengan <em>satu prompt.</em></h1>
+      <p class="lead">Ubah rekaman sederhana menjadi konten menarik tanpa mengedit setiap elemen secara manual. Anda cukup merekam, mengunggah, lalu mengarahkan AI seperti seorang sutradara.</p>
+      <div class="actions">
+        <a class="btn primary" href="#cara">Mulai dari awal ↓</a>
+        <a class="btn secondary" href="#builder">Buat prompt sekarang</a>
+      </div>
+      <div class="stats">
+        <div><b>1</b><span>struktur prompt</span></div>
+        <div><b>5</b><span>gaya visual</span></div>
+        <div><b>0</b><span>timeline rumit</span></div>
+      </div>
+    </div>
+    
+    <div class="visual">
+      <div class="blob"></div>
+      
+      <!-- KARTU 1 (Ganti URL Gambar Mentah Disini) -->
+      <div class="phone raw">
+        <div class="phone-top"><i></i><b>RAW VIDEO</b></div>
+        <div class="screen">
+          <img src="URL_GAMBAR_MENTAH_DISINI" alt="Video Mentah" onerror="this.src='https://placehold.co/205x296/d9d4cc/999?text=Video+Mentah'">
+        </div>
+        <div class="timeline"><i></i></div>
+      </div>
+      
+      <div class="prompt-chip">✦ 1 prompt</div>
+      <div class="arrow">→</div>
+      
+      <!-- KARTU 2 (Ganti URL Gambar Edit Disini) -->
+      <div class="phone edited">
+        <div class="phone-top"><i></i><b>AI EDIT</b></div>
+        <div class="screen">
+          <img src="URL_GAMBAR_EDIT_DISINI" alt="Video Edit" onerror="this.src='https://placehold.co/205x296/ffe36a/999?text=Video+Edit'">
+          <b class="pop p1">PROMPT</b>
+          <b class="pop p2">SIAP!</b>
+        </div>
+        <div class="timeline"><i></i></div>
+      </div>
+      
+      <span class="float f1">✦ Motion graphic</span>
+      <span class="float f2">✓ Wajah & suara tetap asli</span>
+    </div>
+  </section>
+  
+  <div class="audience"><span>Cocok untuk Anda yang ingin:</span><div><b>01</b>Mulai ngonten</div><div><b>02</b>Promosi usaha rumahan</div><div><b>03</b>Belajar jasa video</div></div>
+
+  <section class="section paper" id="cara">
+    <div class="heading center">
+      <span class="kicker">Cara kerjanya</span>
+      <h2>Dari video mentah ke konten menarik dalam empat langkah.</h2>
+      <p>Tidak perlu menghafal istilah teknis. Ikuti urutannya, salin prompt, lalu sesuaikan bagian yang ditandai.</p>
+    </div>
+    <div class="step-grid">
+      <article class="step"><span class="num">01</span><h3>Rekam</h3><p>Buat video singkat 5–10 detik menggunakan kamera HP.</p></article>
+      <article class="step"><span class="num">02</span><h3>Unggah</h3><p>Pilih video di Google Flow dan gunakan model Omni Flash.</p></article>
+      <article class="step"><span class="num">03</span><h3>Arahkan</h3><p>Masukkan blok pengunci, gaya visual, dan teks pop-up.</p></article>
+      <article class="step"><span class="num">04</span><h3>Perbaiki</h3><p>Berikan satu instruksi revisi untuk satu masalah.</p></article>
+    </div>
+    <div class="note"><i>✦</i><div><b>Ubah cara berpikirnya</b><p>Anda tidak lagi mengedit setiap elemen secara manual. Anda bertindak sebagai sutradara yang memberi arahan kepada editor AI.</p></div></div>
+  </section>
+
+  <section class="section" id="persiapan">
+    <div class="prep">
+      <div class="intro">
+        <span class="kicker">Sebelum praktik</span>
+        <h2>Siapkan video yang mudah dipahami AI.</h2>
+        <p>Kualitas rekaman awal sangat memengaruhi hasil. Tandai setiap poin setelah siap.</p>
+        <div class="progress-card">
+          <span class="ring" id="ring"><b id="progressText">0/6</b></span>
+          <span><strong id="progressTitle">Persiapan Anda</strong><small id="progressSub">Lengkapi checklist di samping.</small></span>
+        </div>
+      </div>
+      <div class="checks" id="checks"></div>
+    </div>
+  </section>
+
+  <section class="section dark-section" id="prompt">
+    <div class="heading">
+      <span class="kicker light-kicker">Bagian paling penting</span>
+      <h2>Kenali blok pengunci.</h2>
+      <p>Blok ini menjaga wajah, tubuh, pakaian, gerakan, suara, dan objek utama agar tidak ikut berubah saat AI menambahkan gaya visual.</p>
+    </div>
+    <div class="lock-grid">
+      <article class="prompt-card">
+        <div class="prompt-head"><span>BLOK PENGUNCI</span><button class="copy" data-copy-target="lockPrompt">Salin teks</button></div>
+        <pre id="lockPrompt"></pre>
+      </article>
+      <aside class="variables">
+        <h3>Bagian yang perlu diganti</h3>
+        <article><code>[OBJEK UTAMA]</code><p>Benda penting yang terlihat bersama Anda.</p><b>Contoh: mikrofon</b></article>
+        <article><code>[DESKRIPSI OBJEK]</code><p>Ciri fisik objek secara spesifik.</p><b>Contoh: mikrofon meja hitam dengan tombol hijau</b></article>
+        <article class="anchor-note"><b>Mengapa perlu objek utama?</b><p>Objek berfungsi sebagai jangkar visual agar AI memahami bagian yang tidak boleh berubah.</p></article>
+      </aside>
+    </div>
+  </section>
+
+  <section class="section paper" id="gaya">
+    <div class="heading center">
+      <span class="kicker">Pilih suasananya</span>
+      <h2>Lima gaya visual, satu yang paling cocok untuk pesan Anda.</h2>
+      <p>Klik satu gaya untuk menggunakannya di Prompt Builder.</p>
+    </div>
+    <div class="styles" id="styleCards"></div>
+  </section>
+
+  <section class="section builder-section" id="builder">
+    <div class="builder-title">
+      <span class="kicker light-kicker">Prompt Builder</span>
+      <h2>Isi kebutuhan Anda. Prompt lengkap dibuat otomatis.</h2>
+      <p>Tidak perlu mencari dan mengganti tanda kurung siku satu per satu.</p>
+    </div>
+    <div class="builder-grid">
+      <form class="form" onsubmit="return false">
+        <label><span>1. Objek utama</span><small>Pilih satu benda yang selalu terlihat.</small><input id="objectName" value="mikrofon"></label>
+        <label><span>2. Deskripsi objek</span><small>Sebutkan warna, bentuk, dan cirinya.</small><input id="objectDesc" value="mikrofon meja hitam dengan tombol hijau dan stand"></label>
+        <label><span>3. Kalimat yang diucapkan</span><small>Tulis sama persis dengan audio video.</small><textarea id="spoken" rows="4">Bisnis tidak membutuhkan lebih banyak klik. Bisnis membutuhkan pelanggan yang tepat.</textarea></label>
+        <fieldset>
+          <legend>4. Tiga teks pop-up</legend><small>Idealnya 2–4 kata per pop-up.</small>
+          <input class="popup-input" value="BUKAN SEKADAR KLIK" aria-label="Pop-up 1">
+          <input class="popup-input" value="PELANGGAN TEPAT" aria-label="Pop-up 2">
+          <input class="popup-input" value="STRATEGI TERUKUR" aria-label="Pop-up 3">
+        </fieldset>
+        <div class="selected-style">
+          <small>Gaya terpilih</small>
+          <b id="selectedStyleName">Kolase mixed-media</b>
+        </div>
+      </form>
+      <article class="generated">
+        <div class="prompt-head">
+          <span>✦ PROMPT SIAP PAKAI<small id="generatedLabel">Blok pengunci + Kolase mixed-media</small></span>
+          <button class="copy orange" data-copy-target="finalPrompt">Salin prompt</button>
+        </div>
+        <pre id="finalPrompt"></pre>
+        <div class="prompt-status">
+          <span>✓ Wajah & suara dikunci</span><span>✓ Gaya sudah ditambahkan</span><span>✓ Teks pop-up sudah diisi</span>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="section popup-section">
+    <div class="two-col">
+      <div class="intro">
+        <span class="kicker">Teks pop-up</span><h2>Tulis singkat agar cepat terbaca.</h2><p>Gunakan kata yang memang sedang ditekankan dalam ucapan. Teks pop-up bukan subtitle penuh.</p>
+        <ul class="rules"><li><b>2–4 kata</b> per pop-up</li><li>Hanya <b>satu gagasan</b></li><li>Maksimal <b>3–4 pop-up</b> per klip</li></ul>
+      </div>
+      <div class="compare">
+        <div class="bad"><span>✕ Kurang efektif</span><p>Strategi digital marketing dapat membantu bisnis Anda mendapatkan pelanggan yang lebih relevan.</p></div>
+        <div class="good"><span>✓ Lebih efektif</span><div><b>TARGET TEPAT</b><b>PESAN KUAT</b><b>HASIL TERUKUR</b></div></div>
+        <small>Untuk harga, nomor WhatsApp, atau nama produk yang harus 100% akurat, tetap periksa hasil atau tambahkan pada tahap final.</small>
+      </div>
+    </div>
+  </section>
+
+  <section class="section dark-section">
+    <div class="flow-grid">
+      <div class="intro">
+        <span class="kicker light-kicker">Jalankan di Google Flow</span><h2>Ikuti alur ini saat video Anda siap.</h2>
+        <p>Pilih segmen pendek untuk percobaan pertama, lalu evaluasi hasilnya sebelum melanjutkan.</p>
+        <div class="file-note"><b>Format sumber</b><span>.mov · .mp4 · .avi · .wmv</span><small>Maksimal 1 GB · sumber hingga 60 detik · segmen edit hingga 10 detik</small></div>
+      </div>
+      <ol class="flow-list">
+        <li><span>1</span><p>Buka Google Flow dan masuk menggunakan akun Google.</p></li>
+        <li><span>2</span><p>Buat proyek baru atau buka proyek yang sudah ada.</p></li>
+        <li><span>3</span><p>Pilih Video, kemudian gunakan model Omni Flash.</p></li>
+        <li><span>4</span><p>Pilih orientasi, jumlah output, dan durasi jika tersedia.</p></li>
+        <li><span>5</span><p>Unggah video dan pilih segmen maksimal 10 detik.</p></li>
+        <li><span>6</span><p>Masukkan blok pengunci di bagian paling atas.</p></li>
+        <li><span>7</span><p>Tambahkan satu prompt gaya dan isi semua variabel.</p></li>
+        <li><span>8</span><p>Generate, periksa hasil, lalu revisi satu masalah setiap giliran.</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="section paper" id="perbaikan">
+    <div class="heading center"><span class="kicker">Perbaiki hasil</span><h2>Satu masalah, satu instruksi revisi.</h2><p>Jangan mengganti seluruh prompt ketika hanya satu bagian yang perlu dibenahi.</p></div>
+    <div class="revision-grid" id="revisions"></div>
+    <div class="five-rules">
+      <h3>Lima aturan agar hasil tetap bersih</h3>
+      <div><span><b>01</b>Letakkan blok pengunci paling atas.</span><span><b>02</b>Pilih hanya satu objek utama.</span><span><b>03</b>Gunakan pop-up singkat.</span><span><b>04</b>Cantumkan kalimat lengkap.</span><span><b>05</b>Lakukan revisi satu per satu.</span></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="income">
+      <span class="kicker light-kicker">Langkah setelah belajar</span>
+      <div class="intro"><h2>Ubah latihan menjadi keterampilan yang bernilai.</h2></div>
+      <p>Mulai dari hasil sederhana dan bangun bukti kemampuan. Tidak perlu menunggu semuanya sempurna.</p>
+      <div class="income-steps"><span><b>01</b>Buat 3 video latihan</span><span><b>02</b>Pilih hasil terbaik</span><span><b>03</b>Susun portofolio kecil</span><span><b>04</b>Tawarkan ke UMKM terdekat</span></div>
+    </div>
+  </section>
+  
+  <aside class="privacy">
+    <span class="privacy-icon">⌁</span>
+    <div><b>Catatan privasi sebelum mengunggah</b><p>Unggahan, prompt, proyek, dan hasil generasi dapat tersimpan sampai Anda menghapusnya. Hindari materi rahasia, data pelanggan, atau aset klien yang belum mendapatkan izin. Tinjau juga pilihan “Help improve Flow” pada pengaturan akun Anda.</p></div>
+  </aside>
+  
+  <footer>
+    <div class="brand"><span class="logo">AI</span><span><strong>Prompt Guide</strong><small>Video Editing</small></span></div>
+    <p>Rekam. Arahkan. Perbaiki. Mulai berkarya dari rumah.</p>
+    <a href="#mulai">Kembali ke atas ↑</a>
+  </footer>
+  
+  <div class="toast" id="toast" role="status">✓ Teks berhasil disalin</div>
+
+  <script>
+    const lockPrompt=`Edit video yang saya unggah dengan mengikuti ketentuan berikut.
+
+Pertahankan saya dalam kondisi fotorealistis dan tidak berubah. Jaga wajah, bentuk tubuh, proporsi tubuh, tekstur kulit, rambut, pakaian, gerakan, gestur, waktu gerakan, komposisi kamera, framing, suara asli, serta audio asli tetap sama seperti video sumber.
+
+Jangan mengubah saya menjadi karakter kartun, ilustrasi, lukisan, gambar tangan, karakter 3D, atau karakter animasi.
+
+Pertahankan [OBJEK UTAMA], yaitu [DESKRIPSI OBJEK], sebagai bagian dari subjek utama di area depan. Pertahankan bentuk, warna, ukuran, posisi, orientasi, dan tampilannya sepanjang video.
+
+Jangan menghapus, menyembunyikan, mengganti, mendistorsi, atau mengubah objek tersebut menjadi objek lain.
+
+Hanya ubah dan tambahkan gaya visual pada latar serta elemen-elemen di sekitar saya.`;
+
+    const styles=[
+      {id:1,imgUrl:"URL_GAMBAR_1_DISINI",name:"Kolase mixed-media",short:"Ekspresif & mencuri perhatian",desc:"Potongan majalah, kertas robek, halftone, coretan tangan, dan nuansa stop-motion.",tags:["Edukasi kreatif","Digital marketing","Personal branding"],prompt:`Ubah latar dan elemen di sekitar saya menjadi kolase mixed-media yang ekspresif dengan nuansa stop-motion.
+
+Buat outline putih tipis seperti potongan kertas di sekeliling saya dan [OBJEK UTAMA]. Gunakan latar berupa lapisan kertas kusut, sobekan koran, tekstur halftone, potongan selotip berwarna, dan bentuk-bentuk kertas datar.
+
+Gunakan palet warna merah, kuning terang, hitam, putih tulang, serta sedikit aksen biru.
+
+Tambahkan panah, lingkaran, coretan, stiker, dan aksen selotip yang bergerak secara energik di sekitar saya.`},
+      {id:2,imgUrl:"URL_GAMBAR_2_DISINI",name:"Ruang kerja editing",short:"Teknis & penuh energi",desc:"Timeline, waveform audio, keyframe, layer, dan panel efek muncul di sekitar subjek.",tags:["Tutorial editing","Produktivitas","Proses kerja"],prompt:`Bangun tampilan ruang kerja video editing profesional di sekitar saya. Tambahkan timeline bertumpuk, titik keyframe, motion path, waveform audio, adjustment layer, progress bar, dan panel efek yang muncul secara bertahap.
+
+Gunakan latar gelap seperti antarmuka software editing dengan aksen putih, biru, ungu, kuning, dan merah.
+
+Pertahankan tampilannya padat dan energik, tetapi tetap rapi. Semua elemen harus berada di sekitar subjek dan tidak menutupi wajah maupun [OBJEK UTAMA].`},
+      {id:3,imgUrl:"URL_GAMBAR_3_DISINI",name:"Overlay kreator ceria",short:"Ramah & menyenangkan",desc:"Doodle warna-warni, panah, lingkaran, bintang, stiker, dan kilauan modern.",tags:["Reels & TikTok","Konten ringan","Edukasi singkat"],prompt:`Tambahkan outline putih bersih di sekeliling saya dan [OBJEK UTAMA]. Tambahkan doodle, panah, lingkaran, coretan, stiker, bintang, dan kilauan yang bergerak di sekitar subjek.
+
+Gunakan warna cyan, kuning, oranye, merah muda, ungu, dan putih. Buat animasinya ceria, modern, halus, dan energik seperti video kreator profesional.
+
+Jangan menutupi wajah, tangan, atau objek utama.`},
+      {id:4,imgUrl:"URL_GAMBAR_4_DISINI",name:"Sketsa papan tulis",short:"Sederhana & edukatif",desc:"Subjek tetap realistis, sementara latar menjadi papan tulis dengan animasi kapur.",tags:["Konten edukasi","Tutorial","Penjelasan konsep"],prompt:`Ubah hanya latar dan overlay menjadi papan tulis digital berwarna gelap. Tambahkan garis kapur putih, panah, lingkaran, garis bawah, diagram sederhana, dan doodle yang menggambar dirinya sendiri saat saya berbicara.
+
+Tambahkan aksen warna cyan, kuning, merah muda, dan oranye. Pertahankan saya dan [OBJEK UTAMA] sepenuhnya fotorealistis.
+
+Buat teks pop-up seperti tulisan kapur yang tebal dan mudah dibaca. Jangan menerapkan efek sketsa pada wajah, tubuh, pakaian, atau objek utama.`},
+      {id:5,imgUrl:"URL_GAMBAR_5_DISINI",name:"Editorial explainer",short:"Bersih & profesional",desc:"Tipografi tebal, bentuk datar, callout, highlight, dan panah sederhana.",tags:["Konten bisnis","Strategi","Personal branding"],prompt:`Berikan video tampilan editorial explainer yang bersih dan modern. Tambahkan bentuk-bentuk datar, tipografi tebal, panah sederhana, lingkaran, garis bawah, blok highlight, dan callout di sekitar saya.
+
+Gunakan palet putih, hitam, merah, beige, dan biru redup. Motion graphic harus membantu memperjelas ucapan, bukan sekadar menjadi dekorasi.
+
+Jangan membuat grafik, statistik, angka, atau panel antarmuka yang tidak saya minta. Jangan menutupi wajah atau [OBJEK UTAMA].`}
+    ];
+
+    const checks=[
+      ["Format video vertikal 9:16","Minimal 1080 × 1920 piksel."],["Durasi latihan 5–10 detik","Pendek dulu agar mudah dievaluasi."],["Wajah mendapat cahaya merata","Hindari cahaya belakang terlalu terang."],["Audio terdengar jelas","Kurangi suara latar dan bicara dengan tenang."],["Ada ruang kosong di frame","Sisakan area kiri, kanan, dan atas."],["Satu objek utama terlihat jelas","Contoh: mikrofon, produk, laptop, atau buku."]
+    ];
+
+    const revisionData=[
+      ["⚡","Bagian awal kurang menarik","Buat dua detik pertama terasa lebih kuat dan energik. Munculkan pop-up pertama lebih cepat, tetapi pertahankan wajah, suara, objek utama, dan bagian lain tetap sama."],["◌","Latar terlalu ramai","Kurangi elemen visual di belakang wajah saya. Pertahankan energi visual di bagian tepi frame dan berikan ruang kosong yang lebih bersih di sekitar kepala."],["T","Teks terlalu kecil","Perbesar semua teks pop-up sekitar 30 persen dan tampilkan sedikit lebih lama. Jangan mengubah desain, timing suara, wajah, atau elemen lainnya."],["◎","Wajah mulai berubah","Kembalikan wajah saya agar sama persis dengan video sumber. Pertahankan struktur wajah, mata, hidung, mulut, warna kulit, rambut, ekspresi, dan tekstur kulit asli. Jangan menerapkan efek artistik pada wajah."],["□","Objek utama menghilang","Tampilkan kembali [OBJEK UTAMA] sesuai bentuk, warna, ukuran, orientasi, dan posisi pada video sumber. Objek harus terlihat jelas sepanjang video dan tidak boleh tertutup efek visual."]
+    ];
+
+    let activeStyle=1,completed=new Set();
+    const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+    function escText(value){return value||""}
+
+    function renderChecks(){
+      const root=$("#checks");
+      root.innerHTML="";
+      checks.forEach((item,i)=>{
+        const button=document.createElement("button");
+        button.className="check";
+        button.type="button";
+        button.innerHTML=`<span class="box"></span><span><strong>${item[0]}</strong><small>${item[1]}</small></span>`;
+        button.onclick=()=>{
+          completed.has(i)?completed.delete(i):completed.add(i);
+          button.classList.toggle("done");
+          button.querySelector(".box").textContent=completed.has(i)?"✓":"";
+          updateProgress()
+        };
+        root.appendChild(button)
+      })
+    }
+
+    function updateProgress(){
+      const n=completed.size;
+      $("#progressText").textContent=`${n}/6`;
+      $("#ring").style.setProperty("--p",`${n/6*360}deg`);
+      $("#progressTitle").textContent=n===6?"Siap untuk praktik!":"Persiapan Anda";
+      $("#progressSub").textContent=n===6?"Semua dasar sudah lengkap.":"Lengkapi checklist di samping."
+    }
+
+    function renderStyles(){
+      const root=$("#styleCards");
+      root.innerHTML="";
+      styles.forEach(s=>{
+        const button=document.createElement("button");
+        button.type="button";
+        button.className=`style-card${s.id===activeStyle?" selected":""}`;
+        button.dataset.style=s.id;
+        
+        // Sekarang tag <img> mengambil link langsung dari properti imgUrl di atas
+        button.innerHTML=`
+          <div class="style-preview">
+            <img src="${s.imgUrl}" alt="${s.name}" onerror="this.src='https://placehold.co/400x400/eee/999?text=Gaya+${s.id}'">
+            <span class="style-state">${s.id===activeStyle?"✓ Dipilih":"Pilih gaya"}</span>
+          </div>
+          <div class="style-copy">
+            <small>${s.short}</small>
+            <h3>${s.name}</h3>
+            <p>${s.desc}</p>
+            <div class="tags">${s.tags.map(t=>`<span>${t}</span>`).join("")}</div>
+          </div>`;
+          
+        button.onclick=()=>{activeStyle=s.id;renderStyles();updatePrompt()};
+        root.appendChild(button)
+      })
+    }
+
+    function buildPrompt(){
+      const style=styles.find(s=>s.id===activeStyle),
+            obj=escText($("#objectName").value)||"[OBJEK UTAMA]",
+            desc=escText($("#objectDesc").value)||"[DESKRIPSI OBJEK]",
+            spoken=escText($("#spoken").value)||"[KALIMAT LENGKAP]",
+            pops=$$(".popup-input").map((el,i)=>escText(el.value)||`[POP-UP ${i+1}]`);
+      const lock=lockPrompt.replaceAll("[OBJEK UTAMA]",obj).replaceAll("[DESKRIPSI OBJEK]",desc);
+      const visual=style.prompt.replaceAll("[OBJEK UTAMA]",obj);
+      return `${lock}\n\n${visual}\n\nKalimat yang saya ucapkan:\n"${spoken}"\n\nTampilkan hanya teks singkat berikut sesuai momen pembicaraan:\n"${pops[0]}"\n"${pops[1]}"\n"${pops[2]}"\n\nBuat teks besar, tebal, kontras, dan mudah dibaca di layar smartphone. Jangan menutupi wajah atau ${obj}. Jangan menambahkan teks lain dan jangan membuat subtitle lengkap.`
+    }
+
+    function updatePrompt(){
+      const style=styles.find(s=>s.id===activeStyle);
+      $("#selectedStyleName").textContent=style.name;
+      $("#generatedLabel").textContent=`Blok pengunci + ${style.name}`;
+      
+      const pre = $("#finalPrompt");
+      pre.textContent=buildPrompt();
+      
+      // UX Flash animation
+      pre.style.transition = "none";
+      pre.style.backgroundColor = "#3e279f";
+      setTimeout(() => {
+        pre.style.transition = "background-color 0.5s ease";
+        pre.style.backgroundColor = "transparent";
+      }, 50);
+    }
+
+    function renderRevisions(){
+      const root=$("#revisions");
+      root.innerHTML="";
+      revisionData.forEach(r=>{
+        const article=document.createElement("article");
+        article.className="revision";
+        article.innerHTML=`<span class="revision-icon">${r[0]}</span><h3>${r[1]}</h3><p>${r[2]}</p><button class="copy">Salin instruksi</button>`;
+        article.querySelector("button").onclick=function(){copyText(r[2], this)};
+        root.appendChild(article)
+      })
+    }
+
+    // UX Notification on Copy
+    async function copyText(text, btnElement){
+      try{
+        await navigator.clipboard.writeText(text)
+      }catch(e){
+        const t=document.createElement("textarea");
+        t.value=text;document.body.appendChild(t);t.select();document.execCommand("copy");t.remove()
+      }
+      
+      if(btnElement) {
+        const originalText = btnElement.innerText;
+        const originalBg = btnElement.style.background;
+        btnElement.innerText = "✓ Tersalin";
+        btnElement.style.background = "var(--green)";
+        setTimeout(() => {
+          btnElement.innerText = originalText;
+          btnElement.style.background = originalBg;
+        }, 1500);
+      } else {
+        const toast=$("#toast");toast.classList.add("show");
+        setTimeout(()=>toast.classList.remove("show"),1800);
+      }
+    }
+
+    // Scrollspy UX Navigation
+    window.addEventListener("scroll", () => {
+      let current = "";
+      $$("section").forEach(sec => {
+        if (pageYOffset >= sec.offsetTop - 80) current = sec.getAttribute("id");
+      });
+      $$("nav a").forEach(a => {
+        a.classList.toggle("active", a.getAttribute("href") === `#${current}`);
+      });
+    });
+
+    // Initialize the page
+    $("#lockPrompt").textContent=lockPrompt;
+    renderChecks();
+    renderStyles();
+    renderRevisions();
+    updatePrompt();
+    
+    // Bind listeners
+    ["#objectName","#objectDesc","#spoken"].forEach(id=>$(id).addEventListener("input",updatePrompt));
+    $$(".popup-input").forEach(el=>el.addEventListener("input",updatePrompt));
+    
+    $$('[data-copy-target]').forEach(button => {
+      button.addEventListener("click", function(){
+        copyText($("#"+this.dataset.copyTarget).textContent, this)
+      })
+    });
+    
+    $("#menu").onclick=()=>$("#nav").classList.toggle("open");
+    $$("nav a").forEach(a=>a.onclick=()=>$("#nav").classList.remove("open"));
+  </script>
+</body>
+</html>
